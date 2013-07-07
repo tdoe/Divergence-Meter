@@ -1,172 +1,77 @@
 <!DOCTYPE html>
-<html lang="cn">
+<html lang="ja-JP">
 
-	<head>
-		<meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
-		<meta charset="utf-8">
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome
-		Frame Remove this if you use the .htaccess -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>project Divergence Meter</title>
-		<meta name="description" content="">
-		<meta name="author" content="hh">
-		<meta name="viewport" content="width=device-width; initial-scale=1.0">
-		<!-- <link rel="shortcut icon" href="/favicon.ico">
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png"> -->
-		<link rel="stylesheet" type="text/css" href="default.css" />
-		<script src="jquery.min.js"></script>
-	</head>
+<head>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,user-scalable=no,target-densitydpi=medium-dpi,maximum-scale=1.0,minimum-scale=1.0">
+    <title>project Divergence Meter</title>
+    <style>
+        body {
+            background: black;
+            font-size: 100%;
+            text-align: center;
+        }
 
-	<body>
-		<hgroup>
-			<h4>project</h4>
-			<h1>Divergence; <span class="Capital">M</span>eter</h1>
-		</hgroup>
-		<div id="c">
-			<canvas id="myCanvas" width="400" height="135">
-				firefox和chrome是看不到这句话的哦～
-			</canvas>
-		</div>
+        hgroup {
+            text-align: center;
+            color: white;
+        }
 
-		<div>
-			<button type="button" id="cwl">
-				send D-Mail!
-			</button>
-		</div>
+        h1 {
+            font-family: "FZKai-Z03", Times, Georgia, serif;
+            color: #FFFFFF;
+            font-weight: 100;
+            font-size: 3em;
+        }
 
-		<footer>
-			2012.6 HeYeshuang<br />
-			mailto:yeshuanghe#gmail.com<br />
-			<a href="http://wp-heysh.rhcloud.com">my homepage(with nothing)</a>
-		</footer>
-		<script type="text/javascript">
-            const TWIDTH = 400;
-            var h = 135;
-            var w = 400;
-            var shiftH = 0;
-            var shiftW = 0;
-            var c = document.getElementById("myCanvas");
-            var cxt = c.getContext("2d");
-            var img = new Image();
-            $(img).attr("src", "numbers.png");
-            var arr = new Array();
-            arr = createArr();
+        h4 {
+            font-size: 1em;
+            position: relative;
+            top: 40px;
+            left: -200px;
+        }
 
-            function drawBase() {//orphaned
-                var baseC = document.createElement("canvas");
-                baseC.width = TWIDTH;
-                baseC.heigh = 70;
-                baseCxt = baseC.getContext("2d");
-                baseCxt.fillStyle = "#585858";
-                baseCxt.fillRect(0, 0, TWIDTH, 70);
-                cxt.drawImage(baseC, 0, 135);
-            }
+        .Capital {
+            background: white;
+            color: black;
+        }
 
-            //drawBase();
+        button {
+            position: relative;
+            left: 150px;
+            background: transparent;
+            border-width: thin;
+            color: #FFFFFF;
+        }
 
-            function drawTubes(arr, isHighlighted) {
-                var nCanvas = document.createElement("canvas");
-                nCanvas.width = TWIDTH;
-                nCanvas.heigh = 135;
-                nCxt = nCanvas.getContext("2d");
-                var line;
-                if (isHighlighted == true) {
-                    line = 1
-                } else {
-                    line = 0
-                };
-                for (var i = 0; i < arr.length; i++) {
-                    nCxt.drawImage(img, 45 * arr[i], 135 * line, 45, 135, TWIDTH / 8 * i, 0, 45, 135);
-                };
-                return nCanvas;
-            }
+        footer {
+            color: #000000;
+        }
 
-            function createArr() {
-                var numList = [];
-                for ( i = 0; i < 8; i++) {
-                    m = Math.floor(Math.random() * 10);
-                    //t = setTimeout(loop, 100);
-                    numList.push(m);
+        footer a {
+            color: #000000;
+        }
+    </style>
+</head>
 
-                }
-                numList[1] = 10;
-                return numList;
-            }
+<body>
 
-            function blink(greyCVS, shinyCVS) {
-                var gc = greyCVS;
-                var sc = shinyCVS;
-                var scxt = sc.getContext("2d");
-                var factor = 0;
-                const TIME = 0.02;
+<hgroup>
+    <h1>Divergence; <span class="Capital">M</span>eter</h1>
+</hgroup>
 
-                function createImage() {
-                    var sc2 = document.createElement("canvas");
-                    sc2.width = TWIDTH;
-                    sc2.height = 135;
-                    scxt2 = sc2.getContext("2d");
-                    factor += TIME;
-                    cxt.clearRect(0, 0, sc2.width, sc2.height);
-                    cxt.drawImage(gc, shiftW, shiftH);
-                    scxt2.globalAlpha = factor;
-                    scxt2.drawImage(sc, 0, 0);
-                    cxt.drawImage(sc2, shiftW, shiftH);
-                    if (factor >= 2) {
-                        clearInterval(intUp);
-                        intDown = setInterval(createImage2, TIME);
-                    }
-                }
+<canvas id="dMeter"></canvas>
 
-                function createImage2() {
-                    var sc2 = document.createElement("canvas");
-                    sc2.width = TWIDTH;
-                    sc2.height = 135;
-                    scxt2 = sc2.getContext("2d");
-                    factor -= TIME;
-                    cxt.clearRect(0, 0, sc2.width, sc2.height);
-                    cxt.drawImage(gc, shiftW, shiftH);
-                    scxt2.globalAlpha = factor;
-                    scxt2.drawImage(sc, 0, 0);
-                    cxt.drawImage(sc2, shiftW, shiftH);
-                    if (factor <= 0) {
-                        clearInterval(intDown);
-                        cxt.clearRect(0, 0, sc2.width, sc2.height);
-                        cxt.drawImage(gc, shiftW, shiftH);
-                    }
-                }
+<div>
+    <button type="button" id="dMail">
+        send D-Mail
+    </button>
+</div>
 
-                intUp = setInterval(createImage, TIME);
-            }
-
-            function loop() {
-                arr = createArr();
-                cxt.drawImage(drawTubes(arr, false), shiftW, shiftH);
-            }
-
-            function stopLoop() {
-                clearInterval(loop0);
-                blink(drawTubes(arr, false), drawTubes(arr, true));
-            }
-
-            function changeWorldLine() {
-                try {
-                    clearInterval(loop0);
-                    clearTimeout(blink0);
-                } catch(err) {
-                }
-                loop0 = setInterval(loop, 50);
-                blink0 = setTimeout(stopLoop, 3000);
-            }
-
-
-            $(img).load(function() {
-                changeWorldLine();
-            });
-            $("#cwl").click(function() {
-                changeWorldLine();
-            });
-
-		</script>
-	</body>
-
+<script type="text/javascript" src="dMeter.js"></script>
+<img src=""/>
+</body>
 </html>
